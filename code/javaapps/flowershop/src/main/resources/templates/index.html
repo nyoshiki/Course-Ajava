@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <title>ようこそFlowerShop ** florist **へ</title>
+  <link rel="icon" type="image/ico" href="/images/flowershop.ico" />
+
+  <!-- FONT AWESOME 4.7.0 -->
+  <link rel="stylesheet" type="text/css" media="all"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+  <!-- BOOTSTRAP CSS 3.4.1 -->
+  <link rel="stylesheet" type="text/css" media="all" href="/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" media="all" href="/css/bootstrap-theme.min.css" />
+
+  <!-- BUTTER CAKE CSS 4.0.0 -->
+  <link rel="stylesheet" type="text/css" media="all" href="/css/butterCake.min.css" />
+
+</head>
+
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar expand-md default-nav bg-primary">
+    <div class="container">
+
+      <!-- LOGO -->
+      <div class="brand">
+        <a href="#"><img src="/images/flowershop.ico"  ></a>
+      </div>
+
+      <!-- NAVBAR MENU-->
+      <div class="menu-box bg-primary" id="mainNav">
+
+        <!-- CLOSE BUTTON | MOBILE-->
+        <div class="menu-close bg-primary"><i class="fa fa-close"></i></div>
+
+        <!-- MENU -->
+        <ul class="menu ml-auto">
+          <li class="nav-item"><a href="about" th:href="@{/about}" class="nav-link">About</a></li>
+        </ul>
+
+      </div>
+
+      <!-- TOGGLER | MOBILE -->
+      <button class="toggler bg-secondary text-white " data-nav="#mainNav"><i class="fa fa-bars"></i></button>
+
+    </div>
+  </nav>
+
+  <!-- HERO BANNER -->
+  <section class="main-hero">
+    <img class="img-fluid" src="/images/flowertitle.png" />
+    <div class="container text-center">
+      <h1>ようこそ<b>Flower Shopへ</b></h1>
+      <a class="btn primary" href="start" th:href="@{/start}">業務を始めるにはログインしてください</a>
+    </div>
+  </section>
+
+  <!-- JQUERY 3.3.1 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- BOOTSTRAP JS 3.4.1 -->
+  <script src="/css/bootstrap.min.js" ></script>
+
+  <!-- BUTTER CAKE JS 4.0.0 -->
+  <script src="/css/butterCake.min.js" ></script>
+
+</body>
+
+</html>

@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-Application<flowershop>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "jp.flowershop.Application",
+            "projectName": "flowershop"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - PasswordEncodeUtil",
+            "request": "launch",
+            "mainClass": "jp.flowershop.util.PasswordEncodeUtil",
+            "projectName": "flowershop",
+            "env":{"spring_profiles_active":"tool"},
+            "args": "ohanayasan"
+        }
+    ]
+}

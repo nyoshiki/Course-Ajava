@@ -1,0 +1,3 @@
+SELECT * FROM sales WHERE sales_no="F20200401102000";
+SELECT * FROM sales_detail WHERE sales_no="F20200401102000";
+

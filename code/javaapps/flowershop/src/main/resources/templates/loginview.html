@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <title>Flower Shop Management System</title>
+  <link rel="icon" type="image/ico" href="/images/flowershop.ico" />
+
+  <!-- FONT AWESOME 4.7.0 -->
+  <link rel="stylesheet" type="text/css" media="all"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+  <!-- BOOTSTRAP CSS 3.4.1 -->
+  <link rel="stylesheet" type="text/css" media="all" href="/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" media="all" href="/css/bootstrap-theme.min.css" />
+
+  <!-- BUTTER CAKE CSS 4.0.0 -->
+  <link rel="stylesheet" type="text/css" media="all" href="/css/butterCake.min.css" />
+
+</head>
+
+<body>
+
+  <!-- LOGIN CONTAINER -->
+  <section class="login-page flex-center-center py-5 bg-light">
+
+    <!-- FORM -->
+    <div class="w-100 mx-auto px-2" style="max-width: 400px">
+        <form action="login" th:action="@{/login}" method="POST">
+
+        <div class="text-center text-gray">
+          <h2 class="weight-500 mb-1">Login</h2>
+          <p class="h4 mb-2 weight-300">
+           ログインしてください 
+          </p>
+        </div>
+
+        <div class="card overflow-unset mt-9 mb-1">
+          <div class="card-body">
+
+            <!-- AVATAR -->
+            <div class="avatar-icon text-center">
+              <img src="/images/flowershop.ico" alt="Avatar"
+              class="img-circle img-cover card mb-2 ml-auto mr-auto p-1"/>
+            </div>
+
+            <div class="text-danger" th:if="${iserror}">
+              ログインできませんでした。ユーザIDとパスワードをご確認ください。
+            </div>
+
+            <!-- USER ID -->
+            <div class="group">
+              <input type="text" class="input" name="userId" placeholder="ユーザIDを入力してください。">
+            </div>
+
+            <!-- PASSWORD -->
+            <div class="group">
+              <input type="password" class="input" name="password" placeholder="パスワードを入力してください">
+            </div>
+
+            <!-- LOGIN -->
+            <div class="group">
+              <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+              <button class="btn primary block btn-lg weight-500" type="submit">Login</button>
+            </div>
+
+          </div>
+        </div>
+
+      </form>
+    </div>
+
+  </section>
+
+  <!-- STYLE -->
+  <style>
+    .login-page {
+      min-height: 100vh;
+    }
+
+    .login-page .avatar-icon img {
+      margin-top: -80px;
+      width: 128px;
+      height: 128px;
+    }
+  </style>
+
+
+  <!-- JQUERY 3.3.1 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- BOOTSTRAP JS 3.4.1 -->
+  <script src="/css/bootstrap.min.js" ></script>
+
+  <!-- BUTTER CAKE JS 4.0.0 -->
+  <script src="/css/butterCake.min.js" ></script>
+
+</body>
+
+</html>

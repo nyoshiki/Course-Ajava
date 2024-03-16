@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<!--
+  This file contains some false positive bugs detected by spotbugs. Their
+  false positive nature has been analyzed individually and they have been
+  put here to instruct spotbugs it must ignore them.
+-->
+<FindBugsFilter>
+  <!-- bcryptでエンコーディングしたパスワードを保持しているためチェックから除外  -->
+  <Match>
+    <Class name="jp.flowershop.controller.security.WebUISecurityConfig" />
+    <Bug pattern="HARD_CODE_PASSWORD" />
+  </Match>
+  <Match>
+    <Class name="jp.flowershop.controller.security.api.ApiSecurityConfig" />
+    <Bug pattern="HARD_CODE_PASSWORD" />
+  </Match>
+  <Match>
+    <Class name="jp.flowershop.controller.security.SecurityConfig" />
+    <Bug pattern="HARD_CODE_PASSWORD" />
+  </Match>
+  <!-- HTTPログはトレーニングのため出力するためログのセキュリティレベルは解除  -->
+  <Match>
+    <Class name="jp.flowershop.controller.common.HttpLogger" />
+    <Bug pattern="CRLF_INJECTION_LOGS" />
+  </Match>
+  <!-- HttpResponse#sendErrorにてアクセス拒否を送信しているが開発環境にて許可  -->
+  <Match>
+    <Class name="jp.flowershop.controller.security.api.ApiAccessDeniedHandler" />
+    <Bug pattern="XSS_SERVLET" />
+  </Match>
+  <!-- APIは簡易にするためCSRFは対象外としている・受講生のレベルに応じCSRFをCookie対応すれば本件不要  -->
+  <Match>
+    <Class name="jp.flowershop.controller.security.api.ApiSecurityConfig" />
+    <Bug pattern="SPRING_CSRF_PROTECTION_DISABLED" />
+  </Match>
+  <!-- CORSのallowOriginはapplication.propertiesと環境変数で変更可能にしているため除外-->
+  <Match>
+    <Class name="jp.flowershop.controller.security.filter.CorsFilter" />
+    <Bug pattern="PERMISSIVE_CORS" />
+  </Match>
+  <Match>
+    <Class name="jp.flowershop.controller.security.filter.ApiAuthenticationFilter" />
+    <Bug pattern="PERMISSIVE_CORS" />
+  </Match>
+  <Match>
+    <Class name="jp.flowershop.controller.security.filter.ApiAuthenticationFilter" />
+    <Bug code="EI2" />
+  </Match>
+  <Match>
+    <Class name="jp.flowershop.controller.security.api.ApiSecurityProperties" />
+    <Bug pattern="PERMISSIVE_CORS" />
+  </Match>
+
+  <!-- トークン処理において文字列からバイト変換を利用しているが研修の開発容易性を重視しOS標準の変化に依存  -->
+  <Match>
+    <Class name="jp.flowershop.controller.security.filter.ApiAuthenticationFilter" />
+    <Bug pattern="DM_DEFAULT_ENCODING" />
+  </Match>
+  <Match>
+    <Class name="jp.flowershop.controller.security.filter.ApiAuthorizationFilter" />
+    <Bug pattern="DM_DEFAULT_ENCODING" />
+  </Match>
+  <!-- ハードコードされたパスワードではなくパスワードのキーを示す誤検知  -->
+  <Match>
+    <Class name="jp.flowershop.controller.security.filter.ApiAuthenticationFilter" />
+    <Bug pattern="HARD_CODE_PASSWORD" />
+  </Match>
+  <!-- 開発環境にてログ出力を許可  -->
+  <Match>
+    <Class name="jp.flowershop.controller.security.filter.ApiAuthorizationFilter" />
+    <Bug pattern="CRLF_INJECTION_LOGS" />
+  </Match>
+
+  <!-- リダイレクトにおいてクライアントで書き換え可能なgetContextをチェックしていない  -->
+  <Match>
+    <Class name="jp.flowershop.controller.security.WebUIAccessDeniedHandler" />
+    <Bug pattern="UNVALIDATED_REDIRECT" />
+  </Match>
+  <Match>
+    <Class name="jp.flowershop.controller.security.WebUIAuthFailureHandler" />
+    <Bug pattern="UNVALIDATED_REDIRECT" />
+  </Match>
+  <Match>
+    <Class name="jp.flowershop.controller.security.WebUIAuthLogoutSuccessHandler" />
+    <Bug pattern="UNVALIDATED_REDIRECT" />
+  </Match>
+  <Match>
+    <Class name="jp.flowershop.controller.security.WebUIAuthSuccessHandler" />
+    <Bug pattern="UNVALIDATED_REDIRECT" />
+  </Match>
+
+  
+</FindBugsFilter>

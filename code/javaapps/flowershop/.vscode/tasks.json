@@ -1,0 +1,141 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build:ビルドの初期化・クリーン",
+            "type": "shell",
+            "windows": {
+                "command": ".\\win-gradle.bat clean"
+            },
+            "command": "gradle clean"
+        },
+        {
+            "label": "Check:コードチェックCheckStyle,SpotBugs",
+            "type": "shell",
+            "windows": {
+                "command": ".\\win-gradle.bat checkstyleMain --info;.\\win-gradle.bat spotbugsMain --info"
+            },
+            "command": "gradle checkstyleMain --info; gradle spotbugsMain --info",
+            "problemMatcher": []
+        },
+        {
+            "label": "Test:単体テスト Small アプリ・ドメインのみ実行",
+            "type": "shell",
+            "windows": {
+                "command": ".\\win-gradle.bat testSmallUT --info"
+            },
+            "command": "gradle testSmallUT --info",
+            "problemMatcher": []
+        },
+        {
+            "label": "Test:単体テスト Middle コントローラのみ実行",
+            "type": "shell",
+            "windows": {
+                "command": ".\\win-gradle.bat testWebUT --info"
+            },
+            "command": "gradle testWebUT --info",
+            "problemMatcher": []
+        },
+        {
+            "label": "Test:単体テスト 全て実行",
+            "type": "shell",
+            "windows": {
+                "command": ".\\win-gradle.bat testUT --info"
+            },
+            "command": "gradle testUT --info",
+            "problemMatcher": []
+        },
+        {
+            "label": "Test:結合テスト EndToEndのみ実行",
+            "type": "shell",
+            "windows": {
+                "command": ".\\win-gradle.bat testWebIT --info"
+            },
+            "command": "gradle testWebIT --info",
+            "problemMatcher": []
+        },
+        {
+            "label": "Test:結合テスト 全て実行",
+            "type": "shell",
+            "windows": {
+                "command": ".\\win-gradle.bat testIT --info"
+            },
+            "command": "gradle testIT --info",
+            "problemMatcher": []
+        },
+        {
+            "label": "Test:全テスト実行",
+            "type": "shell",
+            "windows": {
+                "command": ".\\win-gradle.bat test --info"
+            },
+            "command": "gradle test --info",
+            "problemMatcher": [],
+			"group": {
+				"kind": "test",
+				"isDefault": true
+			}
+        },
+        {
+            "label": "Report:チェック・テスト結果参照用簡易HTTPサーバ起動",
+            "type": "shell",
+            "command": "cd build/reports;python3 -m http.server",
+            "problemMatcher": []
+        },
+        {
+            "label": "Build:ビルド・コードチェック・テスト・アセンブル",
+            "type": "shell",
+            "windows": {
+                "command": ".\\win-gradle.bat build --info"
+            },
+            "command": "gradle build --info",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Report:CheckStyle結果(Windows直インストールのみ)",
+            "type": "shell",
+            "windows": {
+                "command": "start .\\build\\reports\\checkstyle\\main.html"
+            },
+            "command": "echo 'Windows直インストールのみ利用できるタスクです'",
+            "problemMatcher": []
+        },
+        {
+            "label": "Report:SpotBugs結果(Windows直インストールのみ)",
+            "type": "shell",
+            "windows": {
+                "command": "start .\\build\\reports\\spotbugs\\main.xml"
+            },
+            "command": "echo 'Windows直インストールのみ利用できるタスクです'",
+            "problemMatcher": []
+        },
+        {
+            "label": "Report:テスト結果(Windows直インストールのみ)",
+            "type": "shell",
+            "windows": {
+                "command": "start .\\build\\reports\\tests\\test\\index.html"
+            },
+            "command": "echo 'Windows直インストールのみ利用できるタスクです'",
+            "problemMatcher": []
+        },
+        {
+            "label": "Report:テストカバレッジ(Windows直インストールのみ)",
+            "type": "shell",
+            "windows": {
+                "command": "start .\\build\\reports\\jacoco\\test\\html\\index.html"
+            },
+            "command": "echo 'Windows直インストールのみ利用できるタスクです'",
+            "problemMatcher": []
+        },
+        {
+            "label": "Report:Nginx環境へのレポートリリース(Ubuntu/Macのみ)",
+            "type": "shell",
+            "command": "cp -rp ~/workspace/flowershop/code/javaapps/flowershop/build/reports ~/workspace/flowershop/htdocs/. ",
+            "problemMatcher": []
+        }
+    ]
+}

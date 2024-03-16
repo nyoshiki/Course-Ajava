@@ -1,0 +1,266 @@
+/*
+ ----- 主な利用コマンド -----
+ 全てのタスクはgradle -q tasks --allで照会可能
+
+ [標準]
+ <Help Task>
+ gradle tasks       利用できるタスクの一覧を表示
+ gradle properties  現在の設定を表示
+
+[Java プラグイン]
+ https://docs.gradle.org/current/userguide/java_plugin.html#sec:java_tasks参照
+
+ <主なタスク>
+ gradle clean            ビルドしたclassやjar、warを一斉消去
+ gradle classes          コンパイルのみ実行
+ gradle check            コンパイル、静的コードチェック、テストを実行
+ gradle build            コンパイル、静的コードチェック、テストを実行
+ gradle testClasses      テストクラスのコンパイルのみ
+ gradle war              webAppDirを含むWARをlibsDirに生成
+ gradle javadoc          JavaDocを生成する　※未テスト
+ gradle test             テスト実行 --tests "クラス名" --tests "クラス名.メソッド名"
+
+[Spring Boot プラグイン]
+
+ <主なタスク>
+ gradle bootJar          Spring Bootのライブラリ全てを含み独立実行可能なFat Jarを生成
+ gradle bootRun          Spring BootのFat Jarを起動
+
+[Checkstyle プラグイン]
+checkstyle.xmlを
+https://github.com/checkstyle/checkstyle/blob/master/src/main/resources/google_checks.xml
+からダウンロードしconfig/cyeckstyle/checkstyle.xmlとして保存
+https://mvnrepository.com/artifact/com.puppycrawl.tools/checkstyleなどで
+最新のツールバージョンに更新しないとxmlの構造が合わずエラーとなるため注意
+結果はbuild/checkstyle/に保管される
+ <主なタスク>
+ gradle checkstyleMain   アプリケーションのソースコードに対するチェック
+ gradle checkstyleTest   テストのソースコードに対するチェック
+
+[SpotBugs プラグイン]
+https://spotbugs.readthedocs.io/ja/latest/gradle.html
+検出されたバグレポートはhttps://spotbugs.readthedocs.io/en/stable/bugDescriptions.html参照
+config/spotbugsに除外条件を記載
+結果はbuild/spotbugs/に保管される
+ <主なタスク>
+ gradle spotbugsMain     アプリケーションのソースコードに対するチェック
+
+[Docker プラグイン]
+ <主なタスク>
+ gradle assemble docker SpringBootのdocker imageを生成
+ */
+
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '2.6.6'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'checkstyle'
+    //Java 17対応
+    id "com.github.spotbugs" version "4.7.3"
+    id 'jacoco'
+    // Gradle 8.x対応
+    id 'com.palantir.docker' version '0.35.0'
+}
+
+group = 'jp.flowershop'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    // Gradle 9.x
+    sourceCompatibility = JavaVersion.VERSION_17
+}
+
+println("OS:" + System.getProperty("os.name"))
+println("OS Architecture:" + System.getProperty("os.arch"))
+println("OS Version:" + System.getProperty("os.version"))
+println("Project Dir:" + file("${rootProject.projectDir}"))
+println("Project Build Dir" + file("${project.layout.buildDirectory}"))
+
+configurations {
+    scm
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    // dependenciesはMavan Repositoryでバージョンを確認する
+    // https://mvnrepository.com/
+    mavenCentral()
+}
+
+dependencies {
+    scm 'org.eclipse.jgit:org.eclipse.jgit:4.9.2.201712150930-r'
+
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation "org.springframework.boot:spring-boot-starter-security"
+    implementation "org.springframework.boot:spring-boot-starter-validation"
+    implementation "org.thymeleaf.extras:thymeleaf-extras-java8time:3.0.1.RELEASE"
+
+    compileOnly 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    annotationProcessor 'org.projectlombok:lombok'
+    //ARM64bitのRaspberryPIではMySQLの安定版DockerイメージがないためMySQLの代わりにMariaDBを有効にする
+    //implementation 'org.mariadb.jdbc:mariadb-java-client:2.1.2'
+    runtimeOnly 'mysql:mysql-connector-java'
+
+    //Java17対応
+    //spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.10.1'
+    spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.12.0'
+
+    /*----------------
+     * JUnit5対応
+     *----------------*/
+    /* --- ORIGINAL -----
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+    --- ORIGINAL ----- */
+
+    // for JUnit5 Modified Start ------->
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'junit', module: 'junit'
+    }
+    //JUnit5で大幅に構成変更になったことに伴う対応 BOMを使っているのでバージョン指定不要
+    testImplementation 'org.junit.jupiter:junit-jupiter'//JUnit5のAPI
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'//IDEなどのサポート用
+    testRuntimeOnly 'org.junit.vintage:junit-vintage-engine'//JUnit3,4対応
+    testCompileOnly 'junit:junit'//Junit5のBOMからJunit4を入れなおせば、4以前のテストも競合しない
+    // for JUnit5 Modified End ------->
+    // for Spring Security Testing
+    testImplementation 'org.springframework.security:spring-security-test'
+    // for Test Mockito
+    testImplementation "org.mockito:mockito-core:3.4.4"
+    testImplementation "org.mockito:mockito-junit-jupiter:3.4.4"
+    // for Mock Static Method
+    testImplementation 'org.mockito:mockito-inline:3.11.2'
+    // for AssertJ ※Hamcrestと比較し型補完されるため利用しやすいため適材適所で利用する
+    testImplementation "org.assertj:assertj-core:3.16.1"
+    // for DB Unit
+    testImplementation 'com.github.springtestdbunit:spring-test-dbunit:1.3.0' // SpringでDBUnitを用いる
+    testImplementation 'org.dbunit:dbunit:2.7.0' // DBUnitのAPI
+
+    // for Swagger
+    // Spring 2.6.6 Upgradeに伴い、Springfoxの利用を廃止しSpringdocを利用する
+    // 参照：
+    // https://springdoc.org/ 
+    // application.propertiesの設定などはhttps://springdoc.org/#propertiesを参照
+    // implementation "io.springfox:springfox-boot-starter:3.0.0"
+    implementation("org.springdoc:springdoc-openapi-ui:1.6.7")
+    implementation("org.springdoc:springdoc-openapi-security:1.6.7")
+
+    // for JWT JSON Web Token Support For The JVM 
+    implementation "io.jsonwebtoken:jjwt:0.9.1"
+}
+
+compileJava {
+    options.compilerArgs << '-Xlint:deprecation'
+}
+
+compileTestJava {
+    options.compilerArgs << '-Xlint:deprecation'
+}
+
+checkstyle {
+    toolVersion = '8.34'
+    ignoreFailures = false
+    showViolations = true
+    configFile = file("${rootProject.projectDir}/config/checkstyle/checkstyle.xml")
+}
+
+spotbugs {
+    //Java17対応
+    toolVersion = "4.7.3"
+    ignoreFailures = false
+    spotbugsTest.enabled = false
+    excludeFilter = file("${rootProject.projectDir}/config/spotbugs/spotbugs-exclude.xml")
+}
+
+test {
+    useJUnitPlatform()
+}
+
+// Unit Testの内、200ms以内のSmallテストのみ実施
+// 対象はPOJOのapplicationとdomainのみテスト
+task testSmallUT(type: Test, dependsOn: testClasses) {
+    useJUnitPlatform {
+        include '**/unittest/**'
+        exclude '**/repository/**', '**/controller/**'
+    }
+}
+
+// Unit Testの内、Middleに当たるWebモックテストのみ実施
+// 対象はWebMvcTestのControllerのみ
+task testWebUT(type: Test, dependsOn: testClasses) {
+    useJUnitPlatform {
+        include '**/unittest/**'
+        exclude '**/repository/**', '**/application/**', '**/domain/**'
+    }
+}
+
+// Unit Test 全体をテスト
+task testUT(type: Test, dependsOn: testClasses) {
+    useJUnitPlatform {
+        include '**/unittest/**'
+    }
+}
+
+// Integration Testの内WebのEndToEndシナリオのみ実施
+// 対象はtest配下のcontrollerのみ
+task testWebIT(type: Test, dependsOn: testClasses) {
+    useJUnitPlatform {
+        include '**/test/controller/**'
+    }
+}
+
+// Integration Testを全件実施
+// 対象はWebのEndToEndシナリオとApplication層のシナリオ
+task testIT(type: Test, dependsOn: testClasses) {
+    useJUnitPlatform {
+        include '**/test/**'
+        exclude '**/unittest/**'
+    }
+}
+
+jacoco {
+    //Java17対応
+    //toolVersion = "0.8.5"
+    toolVersion = "0.8.7"
+}
+
+test.finalizedBy jacocoTestReport
+
+// jacocoTestReportではHTMLレポートを有効にし
+// 共通機能のカバレッジやlombok等の自動生成メソッドはカバレッジ対象から除外
+jacocoTestReport {
+    // reports {
+    //    xml.required = false
+    //    csv.required = false
+    //    html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+    //}
+
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(
+                dir: it,
+                exclude: ['jp/flowershop/Application.class',
+                          'jp/flowershop/controller/common/**',
+                          'jp/flowershop/controller/security/**',
+                          'jp/flowershop/util/**'
+                ]
+            )
+        }))
+    }
+}
+
+tasks.dockerPrepare.dependsOn tasks.bootJar
+
+docker {
+    name "flowershop/flower_app_springboot"
+    tags 'latest'
+    dockerfile file('../../../docker/qaenv/springboot/Dockerfile')
+    files ("build/libs/${bootJar.archiveFileName.get()}","build/libs/flowershop-spring-jre.list")
+    buildArgs([JAR_FILE: bootJar.archiveFileName.get(), JRE_LIBS_FILE: 'flowershop-spring-jre.list'])
+}

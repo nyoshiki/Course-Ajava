@@ -1,0 +1,31 @@
+# Docker Composeバージョン
+version: '3' 
+
+services:
+    # Application Server Spring Boot
+    flowershopapp_qa:
+        external_links:
+            - flowershopdb_qa
+        container_name: "flower_app_001_qa"
+        hostname: "flower_app_server_001_qa"
+        # imageのビルドはgradleで実行
+        image: flowershop/flower_app_springboot:latest
+        tty: true
+        # アプリケーションサーバはコンテナ間のみアクセス許可
+        expose:
+            - 9110
+        env_file:
+            - ${WORKSPACE}/docker/qaenv/springboot/flower_app_server_001_qa.env
+        networks:
+            flower-pj-qaenv_flower_web_segment_qa:
+                ipv4_address: 172.30.0.30
+        logging:
+            driver: "json-file"
+            options: 
+                max-size: "10m" 
+                max-file: "3"
+
+# コンテナ間で通信を行うためのネットワークブリッジ
+networks:
+    flower-pj-qaenv_flower_web_segment_qa:
+        external: true

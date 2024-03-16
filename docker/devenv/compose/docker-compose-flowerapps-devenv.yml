@@ -1,0 +1,45 @@
+# Docker Composeバージョン
+version: '3' 
+
+services:
+    # DB Server MySQL
+    flowershopdb:
+        container_name: "flower_db_mysql"
+        hostname: "flower_db_server"
+        image: mysql:8.0
+        # for MariaDB Raspberry PI ARM64用
+        #image: jsurf/rpi-mariadb
+        tty: true
+        env_file:
+            - ${WORKSPACE}/docker/devenv/mysql/flower_mysql.env
+        ports:
+            - "59306:59306"
+        volumes:
+            - ${WORKSPACE}/docker/devenv/mysql/initdb.d:/docker-entrypoint-initdb.d
+            - ${WORKSPACE}/docker/devenv/mysql/conf.d:/etc/mysql/conf.d
+            - db_log:/var/log/mysql
+            - db_data:/var/lib/mysql
+        networks:
+            flower_web_segment:
+                ipv4_address: 172.20.0.20
+        logging:
+            driver: "json-file"
+            options: 
+                max-size: "10m" 
+                max-file: "3"
+
+# コンテナ間で通信を行うためのネットワークブリッジ
+networks:
+    flower_web_segment:
+        driver: bridge
+        ipam:
+            config:
+                - subnet: 172.20.0.0/24
+
+# データベース永続化
+# ※クリアする場合はdocker volume rm db_data or db_logで削除
+volumes:
+    db_data:
+        driver: 'local'
+    db_log:
+        driver: 'local'

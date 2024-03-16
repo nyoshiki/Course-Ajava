@@ -1,0 +1,74 @@
+# Docker Composeバージョン
+version: '3' 
+
+services:
+    flowershopweb_qa:
+        container_name: "flower_web_001_qa"
+        hostname: "flower_web_server_001_qa"
+        image: nginx:1.17.8-alpine
+        tty: true
+        # Webサーバはネットワーク外からの直接通信許可
+        ports:
+            - "80:9100"
+            - "443:443"
+        environment:
+            - TZ=Asia/Tokyo
+        volumes:
+            - ${WORKSPACE}/docker/qaenv/nginx/config/nginx_flower.conf:/etc/nginx/nginx.conf:ro
+            - ${WORKSPACE}/docker/qaenv/nginx/ssl:/etc/nginx/ssl
+            - ${WORKSPACE}/htdocs:/var/htdocs:ro
+            - web_log_qa:/var/log/nginx
+        networks:
+            flower_web_segment_qa:
+                ipv4_address: 172.30.0.10
+        logging:
+            driver: "json-file"
+            options: 
+                max-size: "10m" 
+                max-file: "3"
+
+    # DB Server MySQL
+    flowershopdb_qa:
+        container_name: "flower_db_001_qa"
+        hostname: "flower_db_server_001_qa"
+        image: mysql:8.0
+        # MariaDB用 Raspberry PIではMariaDBを有効にする
+        #image: jsurf/rpi-mariadb
+        tty: true
+        env_file:
+            - ${WORKSPACE}/docker/qaenv/mysql/flower_mysql.env
+        # DBサーバは直接メンテナンスのため
+        # 検証環境はネットワーク外からの直接通信許可
+        ports:
+            - "51306:51306"
+        volumes:
+            - ${WORKSPACE}/docker/qaenv/mysql/initdb.d:/docker-entrypoint-initdb.d
+            - ${WORKSPACE}/docker/qaenv/mysql/conf.d:/etc/mysql/conf.d
+            - db_data_qa:/var/lib/mysql
+            - db_log_qa:/var/log/mysql
+        networks:
+            flower_web_segment_qa:
+                ipv4_address: 172.30.0.20
+        logging:
+            driver: "json-file"
+            options: 
+                max-size: "10m" 
+                max-file: "3"
+
+# コンテナ間で通信を行うためのネットワークブリッジ
+networks:
+    flower_web_segment_qa:
+        driver: bridge
+        ipam:
+            config:
+                - subnet: 172.30.0.0/24
+
+# データベース永続化
+# - クリアする場合はdocker volume rm db_data or db_logで削除
+volumes:
+    db_data_qa:
+        driver: 'local'
+    db_log_qa:
+        driver: 'local'
+    web_log_qa:
+        driver: 'local'

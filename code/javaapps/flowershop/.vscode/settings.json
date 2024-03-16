@@ -1,0 +1,174 @@
+{
+  // --------------------------------------
+  // JDKインストールパス
+  // --------------------------------------
+  //最新のJava拡張機能では環境変数JAVA_HOMEを参照するため個別設定不要
+
+  // --------------------------------------
+  // 隠しファイルが表示設定
+  // --------------------------------------
+  "files.exclude": {
+    "**/.classpath": false,
+    "**/.project": false,
+    "**/.settings": false,
+    "**/.factorypath": false
+  },
+
+  // --------------------------------------
+  // エディタ表示設定
+  // --------------------------------------
+  "editor.rulers":[80, 120],
+
+  // --------------------------------------
+  // クイックサジェスト設定
+  // --------------------------------------
+  "editor.quickSuggestions": {
+    "other": true,
+    "comments": false,
+    "strings": false
+  },
+  "editor.acceptSuggestionOnCommitCharacter": true,
+  "editor.acceptSuggestionOnEnter": "on",
+  "editor.quickSuggestionsDelay": 10,
+  "editor.suggestOnTriggerCharacters": true,
+  "editor.tabCompletion": "on",
+  "editor.suggest.localityBonus": true,
+  "editor.suggestSelection":"recentlyUsedByPrefix",
+  "editor.wordBasedSuggestions": true,
+  "editor.parameterHints.enabled": true,
+  // "editor.codeActionsOnSave": {
+  //   "source.organizeImports": true
+  // },
+  
+  // JavaScript中のTymeleafの構文がエラーとなるためスクリプトの構文チェックは実施しない
+  "html.validate.scripts": false,
+
+  // --------------------------------------
+  // 修正時自動ビルド設定
+  // --------------------------------------
+  "java.configuration.updateBuildConfiguration": "automatic",
+
+  // --------------------------------------
+  // SQLTools MySQL 接続設定
+  // --------------------------------------
+  "sqltools.connections": [
+    {
+      "database": "flower_db",
+      "driver": "MySQL",
+      "mysqlOptions": {
+        "authProtocol": "default"
+      },
+      "name": "connection_flower_db",
+      "password": "password",
+      "port": 59306,
+      "previewLimit": 50,
+      "server": "localhost",
+      "username": "user"
+    }
+  ],
+ 
+  // --------------------------------------
+  //CheckStyle for Java 設定
+  // --------------------------------------
+  //https://checkstyle.org/checks.html
+  //https://checkstyle.sourceforge.io/google_style.html
+  //https://github.com/checkstyle/checkstyle/tree/master/src/main/resources/google_checks.xml
+  "java.checkstyle.configuration": "${workspaceFolder}/config/checkstyle/checkstyle.xml",
+  "java.checkstyle.version": "8.34",
+
+  // --------------------------------------
+  // 自動フォーマット設定
+  // --------------------------------------
+  //CheckStyleとずれるケースがあるため自動制御しない
+  //"editor.formatOnSave": false,
+  //"editor.formatOnType": false,
+  //"editor.formatOnPaste": true,
+  // Google Styleでの自動フォーマット
+  "java.format.settings.url": "https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml",
+  "java.foldingRange.enabled": true,
+
+  // --------------------------------------
+  // import staticのサジェスト表示設定
+  // --------------------------------------
+  "java.completion.favoriteStaticMembers": [
+    "org.hamcrest.CoreMatchers.*",
+    "org.junit.Assert.*",
+    "org.junit.Assume.*",
+    "org.junit.jupiter.api.Assertions.*",
+    "org.junit.jupiter.api.Assumptions.*",
+    "org.junit.jupiter.api.DynamicContainer.*",
+    "org.junit.jupiter.api.DynamicTest.*",
+    "org.mockito.Mockito.*",
+    "org.mockito.ArgumentMatchers.*",
+    "org.mockito.Answers.*",
+    "org.mockito.BDDMockito.*",
+    "org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*",
+    "org.springframework.test.web.servlet.result.MockMvcResultHandlers.*",
+    "org.springframework.test.web.servlet.result.MockMvcResultMatchers.*",
+    "org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*"
+  ],
+  
+  "java.test.config": {
+    "name": "flowershopTestConfig",
+    "workingDirectory": "${workspaceFolder}",
+    "args": ["-c", "jp.fowershop"],
+    "vmargs": ["-Xmx1024M"],
+  },
+  "spring-boot.ls.java.heap": "72m",
+  "cSpell.words": [
+    "aboutview",
+    "accesserror",
+    "assertj",
+    "autoconfigure",
+    "backupdata",
+    "Backuped",
+    "Backupper",
+    "cancelsales",
+    "CHECKSTYLE",
+    "classpath",
+    "Configurer",
+    "CQRS",
+    "curr",
+    "ENTRYPOINT",
+    "flowershop",
+    "flowershopsecret",
+    "Hamcrest",
+    "hhmmss",
+    "inpute",
+    "iserror",
+    "jdbc",
+    "JESSIONID",
+    "Jwts",
+    "loginview",
+    "logvalue",
+    "menuview",
+    "navi",
+    "navibar",
+    "newsales",
+    "nume",
+    "ohanayasan",
+    "oldshop",
+    "productlist",
+    "productselection",
+    "productselectionview",
+    "REQID",
+    "salesdetaillist",
+    "salesdetaillistview",
+    "saleslist",
+    "saleslistview",
+    "selectproduct",
+    "Servlet",
+    "springframework",
+    "springtestdbunit",
+    "statuse",
+    "syse",
+    "tencyo",
+    "testbase",
+    "testdata",
+    "TESTSHOT",
+    "unselectproduct",
+    "vals",
+    "viewmodel"
+  ]
+   //"editor.detectIndentation": false
+}
